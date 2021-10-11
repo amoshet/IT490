@@ -9,9 +9,11 @@ else
 fi
 
 #Front-End
-ssh 34.66.184.176 'bash -s' < ./frontcomposer.sh
+ssh -o ConnectTimeout=10 34.66.184.176 'bash -s' < ./frontcomposer.sh
 #MYSQL Database
-ssh 104.198.163.100 'bash -s' < ./mysql.sh
+ssh -o ConnectTimeout=10 104.198.163.100 'bash -s' < ./mysql.sh
+#Backend
+ssh -o ConnectTimeout=10 34.72.26.172 'bash -s' < ./backend.sh
 exit
 #backend
 #TO BE ADDED
