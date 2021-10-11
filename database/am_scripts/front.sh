@@ -1,4 +1,4 @@
-x=$(systemctl show -p ActiveState --value apache2)
+=$(systemctl show -p ActiveState --value apache2)
 if [[ $x != *"inactive"* ]]
 then
   echo "Front end is already running"
