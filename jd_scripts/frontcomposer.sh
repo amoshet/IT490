@@ -4,8 +4,8 @@
 x=$(systemctl show -p ActiveState --value apache2)
 if [[ $x != *"inactive"* ]]
 then
-  echo "Apache Web Server is already running"
+  echo "Front End is already running"
 else
-  echo "Starting up Apache Web Server"
+  echo "Starting up Front End"
   sudo service apache2 start
 fi

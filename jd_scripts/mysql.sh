@@ -1,9 +1,9 @@
 d=$(systemctl show -p ActiveState --value mysql)
 if [[ $d != *"inactive"* ]]
 then
-  echo "MYSQL is already running"
+  echo "Database is already running"
 else
-  echo "Starting up MYSQL Database"
+  echo "Starting up Database"
   sudo service mysql start
 fi
 exit
