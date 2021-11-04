@@ -7,3 +7,4 @@ else
   sudo service rabbitmq-server start
 fi
 exit
+
