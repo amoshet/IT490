@@ -13,16 +13,16 @@ echo " [*] Waiting for messages. To exit press CTRL+C\n";
 $callback = function ($msg) {
         
 	$v = json_decode($msg->body);
-
-	if ($v->{'type'} = "login")
+	
+	if ($v->{'type'} == "login")
 	{
         $email = $v->{'email'};
         $password = $v->{'password'};
         print $email;
-        print $password;
+	print $password;
 	}
 
-	if ($v->{'type'} = "register" && isset($v->{'username'}))
+	if ($v->{'type'} == "register" && isset($v->{'username'}))
 	{
 		$email2 = $v->{'email'};
 		$username2 = $v->{'username'};
