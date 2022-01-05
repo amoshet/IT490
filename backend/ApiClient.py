@@ -2,7 +2,7 @@
 import pika
 import uuid
 
-class databaseClient(object):
+class apiClient(object):
 
     def __init__(self):
 	self.connection = pika.BlockingConnection(
@@ -22,24 +22,24 @@ class databaseClient(object):
         if self.corr_id == props.correlation_id:
             self.response = body
 
-    def call(self, databaseMessage):
+    def call(self, apiInfo):
         self.response = None
         self.corr_id = str(uuid.uuid4())
         self.channel.basic_publish(
-            exchange='DatabaseExch',
-            routing_key='DBqueue',
+            exchange='APIExch',
+            routing_key='APIqueue',
             properties=pika.BasicProperties(
                 reply_to=self.callback_queue,
                 correlation_id=self.corr_id,
             ),
-            body=str(databaseMessage))
+            body=str(apiInfo))
         while self.response is None:
             self.connection.process_data_events()
         return int(self.response)
 
 
-databaseRPC = databaseClient()
+apiRPC = apiClient()
 
-print("Sending over Database Exchange and queue")
-response = databaseRPC.call("hello")  HERE REPLACE "hello" with a variable, this variable will be what you are sending right now it is n
+print("Sending over API Exchange and queue")
+response = apiRPC.call("hello")  HERE REPLACE "hello" with a variable, this variable will be what you are sending right now it is n
 print(" [.] Got %r" % response)
