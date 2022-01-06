@@ -17,9 +17,9 @@
 <!-- navbar start -->
 <nav>
 <ul class="nav">
-    <li><a href="home.html">Home</a></li>
-    <li><a href="login.html">Login</a></li>
-    <li><a href="register.html">Register</a></li>
+    <li><a href="{{url_for('home')}}">Home</a></li>
+    <li><a href="{{url_for('login')}}">Login</a></li>
+    <li><a href="{{url_for('register')}}">Register</a></li>
 </ul>
 </nav>
 <!-- navbar end -->
@@ -33,6 +33,7 @@
     <input type="submit" name="login" value="Login"/>
 </form>
 
+<h3><center><br><a href="{{url_for('register')}}">Need to make an account? Register</a></h3></center>
 <!-- TODO 
 
 #amqp connection and sending message setup was here
