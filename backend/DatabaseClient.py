@@ -4,7 +4,8 @@ import uuid
 import simplejson as json
 
 credentials = pika.PlainCredentials('admin', 'Group2mq')
-parameters = pika.ConnectionParameters('34.72.76.159' , 5672 ,'IT490',credentials)
+connection = pika.BlockingConnection( pika.ConnectionParameters(host='34.72.76.159' , 5672 ,'IT490',credentials))
+
 class databaseClient(object):
 
 	def __init__(self):
