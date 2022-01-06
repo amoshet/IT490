@@ -3,15 +3,13 @@ import pika
 import uuid
 import simplejson as json
 
-credentials = pika.PlainCredentials('admin', 'Group2mq')
-connection = pika.BlockingConnection(pika.ConnectionParameters('34.72.76.159' , 5672 ,'IT490',credentials))
+
 
 class apiClient(object):
 
 	def __init__(self):
-		self.connection = pika.BlockingConnection(
-			pika.ConnectionParameters(host='localhost'))
-
+		credentials = pika.PlainCredentials('test', 'test')
+		connection = pika.BlockingConnection(pika.ConnectionParameters('34.72.76.159',5672,'IT490',credentials))
 		self.channel = self.connection.channel()
 
 		result = self.channel.queue_declare(queue='', exclusive=True)
@@ -42,8 +40,8 @@ class apiClient(object):
 		return int(self.response)
 
 
-apiRPC = apiClient()
+#apiRPC = apiClient()
 
-print("Sending over API Exchange and queue")
-response = apiRPC.call("hello")  HERE REPLACE "hello" with a variable, this variable will be what you are sending right now it is n
-print(" [.] Got %r" % response)
+#print("Sending over API Exchange and queue")
+#response = apiRPC.call("hello") 
+#print(" [.] Got %r" % response)

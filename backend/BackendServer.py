@@ -3,13 +3,13 @@
 import pika, sys, os
 import simplejson as json
 from DatabaseClient import databaseClient
-from APIClient import apiClient
+from ApiClient import apiClient
 
-credentials = pika.PlainCredentials('admin', 'Group2mq')
+credentials = pika.PlainCredentials('test', 'test')
 connection = pika.BlockingConnection(pika.ConnectionParameters('34.72.76.159',5672,'IT490',credentials))
 channel = connection.channel()
 channel.exchange_declare(exchange='BackEndExch', exchange_type='direct')
-channel.queue_declare(queue='BEServerqueue', exclusive=True)
+channel.queue_declare(queue='BEServerQueue', exclusive=True)
 channel.queue_bind(exchange='BackEndExch', queue='BEServerQueue')
 
 def decider(type, rabbitMsg):
@@ -22,7 +22,7 @@ def decider(type, rabbitMsg):
 	}.get(type)(rabbitMsg)
 
 def on_request(ch, method, props, body):
-    rabbitMSG = body
+    rabbitMSG = json.loads(body.decode('utf-8'))
 
     print(rabbitMSG)
     rabbitResponse = decider(rabbitMSG.get('type'), rabbitMSG)
@@ -35,7 +35,7 @@ def on_request(ch, method, props, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
-channel.basic_consume(queue='BEServerqueue', on_message_callback=on_request)
+channel.basic_consume(queue='BEServerQueue', on_message_callback=on_request)
 
 print('Waiting for BackEnd Requests')
 channel.start_consuming()
