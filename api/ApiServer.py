@@ -2,10 +2,10 @@
 import pika, sys, os
 import requests
 
-connection = pika.BlockingConnection( pika.ConnectionParameters(host='ip of rabbitmq server'))
-channel = connection.channel()
+credentials = pika.PlainCredentials('test', 'test')
+connection = pika.BlockingConnection(pika.ConnectionParameters('34.72.76.159',5672,'IT490',credentials))
 channel.exchange_declare(exchange='APIExch', exchange_type='direct')
-channel.queue_declare(queue='APIServerqueue', exclusive=True)
+channel.queue_declare(queue='APIServerQueue', exclusive=True)
 channel.queue_bind(exchange='APIExch', queue='APIServerQueue')
 
 def decider(type, rabbitMsg):
@@ -29,7 +29,7 @@ def on_request(ch, method, props, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
-channel.basic_consume(queue='APIServerqueue', on_message_callback=on_request)
+channel.basic_consume(queue='APIServerQueue', on_message_callback=on_request)
 
 print("Waiting for BackEnd Requests")
 channel.start_consuming()
@@ -38,4 +38,4 @@ def test():
 	variable = "goodbye"
 	return variable
 
-// add more functions that hit out to requests and return info
+#// add more functions that hit out to requests and return info
