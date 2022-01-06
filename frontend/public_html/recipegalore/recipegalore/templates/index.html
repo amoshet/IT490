@@ -16,10 +16,9 @@
 <!-- navbar start -->
 <nav>
 <ul class="nav">
-    <li><a href="home.html">Home</a></li>
-    <li><a href="login.html">Login</a></li>
-    <li><a href="register.html">Register</a></li>
-</ul>
+    <li><a href="{{url_for('home')}}">Home</a></li>
+    <li><a href="{{url_for('login')}}">Login</a></li>
+    <li><a href="{{url_for('register')}}">Register</a></li></ul>
 </nav>
 <!-- navbar end -->
 
@@ -28,7 +27,7 @@
 <div class="jumbotron">
   <h3><center>
     <br>Welcome to Recipe Galore!<br>
-    <br>Please login to get started with your recipes! <br>
+    <br>Please <a href="{{url_for('register')}}">sign up</a> or <a href="{{url_for('login')}}">login</a> to get started with your recipes! <br>
   </h3></center>
 </div>
 
