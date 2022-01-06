@@ -2,7 +2,7 @@
 import pika, sys, os
 import requests
 
-connection = pika.BlockingConnection( pika.ConnectionParameters(host='ip of rabbitmq server'))
+connection = pika.BlockingConnection( pika.ConnectionParameters(host='34.72.76.159'))
 channel = connection.channel()
 channel.exchange_declare(exchange='APIExch', exchange_type='direct')
 channel.queue_declare(queue='APIServerqueue', exclusive=True)
@@ -38,4 +38,45 @@ def test():
 	variable = "goodbye"
 	return variable
 
-// add more functions that hit out to requests and return info
+def getAuto():
+url = "https://tasty.p.rapidapi.com/recipes/auto-complete"
+
+querystring = {"prefix":"chicken soup"}
+
+headers = {
+    'x-rapidapi-host': "tasty.p.rapidapi.com",
+    'x-rapidapi-key': "7512385757msh4aacdf9961a20c2p1225f7jsn8e19dfc61412"
+    }
+
+response = requests.request("GET", url, headers=headers, params=querystring)
+
+print(response.text)
+
+
+def getList():
+url = "https://tasty.p.rapidapi.com/recipes/list"
+
+querystring = {"from":"0","size":"20"}
+
+headers = {
+    'x-rapidapi-host': "tasty.p.rapidapi.com",
+    'x-rapidapi-key': "7512385757msh4aacdf9961a20c2p1225f7jsn8e19dfc61412"
+    }
+
+response = requests.request("GET", url, headers=headers, params=querystring)
+
+print(response.text)
+
+def getDetail():
+url = "https://tasty.p.rapidapi.com/recipes/detail"
+
+querystring = {"id":"5586"}
+
+headers = {
+    'x-rapidapi-host': "tasty.p.rapidapi.com",
+    'x-rapidapi-key': "7512385757msh4aacdf9961a20c2p1225f7jsn8e19dfc61412"
+    }
+
+response = requests.request("GET", url, headers=headers, params=querystring)
+
+print(response.text)
