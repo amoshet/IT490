@@ -12,9 +12,14 @@ channel.exchange_declare(exchange='BackEndExch', exchange_type='direct')
 channel.queue_declare(queue='BEServerQueue', exclusive=True)
 channel.queue_bind(exchange='BackEndExch', queue='BEServerQueue')
 
+def tester():
+        variable = {'test': "goodbye"}
+        return variable
+
+
 def decider(type, rabbitMsg):
 	return{
-		'test' : lambda data : test(),
+		'test' : lambda data : tester(),
 		'login' : lambda data : loginFunc(rabbitMsg.get('email'), rabbitMsg.get('password')),
 #    		'allRecipes' : lambda data : allRecipes(rabbitMsq.get('search')),
 #		'searchRecipes' : lambda data : searchRecipes(rabbitMsg.get('search'))
@@ -26,7 +31,8 @@ def on_request(ch, method, props, body):
 
     print(rabbitMSG)
     rabbitResponse = decider(rabbitMSG.get('type'), rabbitMSG)
-    frontendReturn = rabbitResponse
+    forJSON  = rabbitResponse
+    frontendReturn = json.JSONEncoder().encode(forJSON)
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,
                      properties=pika.BasicProperties(correlation_id = \
@@ -40,8 +46,8 @@ channel.basic_consume(queue='BEServerQueue', on_message_callback=on_request)
 print('Waiting for BackEnd Requests')
 channel.start_consuming()
 
-def test():
-	variable = "goodbye"
+def tester():
+	variable = {'test': "goodbye"}
 	return variable
 
 def loginFunc(email, password):

@@ -8,7 +8,7 @@ class databaseClient(object):
 
 	def __init__(self):
 		credentials = pika.PlainCredentials('test', 'test')
-		connection = pika.BlockingConnection( pika.ConnectionParameters('34.72.76.159' , 5672 ,'IT490',credentials))
+		self.connection = pika.BlockingConnection( pika.ConnectionParameters('34.72.76.159' , 5672 ,'IT490',credentials))
 		self.channel = self.connection.channel()
 
 		result = self.channel.queue_declare(queue='', exclusive=True)
