@@ -6,7 +6,7 @@ from DatabaseClient import databaseClient
 from APIClient import apiClient
 
 credentials = pika.PlainCredentials('admin', 'Group2mq')
-connection = pika.BlockingConnection( pika.ConnectionParameters(host='34.72.76.159' , 5672 ,'IT490',credentials))
+connection = pika.BlockingConnection(pika.ConnectionParameters('34.72.76.159',5672,'IT490',credentials))
 channel = connection.channel()
 channel.exchange_declare(exchange='BackEndExch', exchange_type='direct')
 channel.queue_declare(queue='BEServerqueue', exclusive=True)
