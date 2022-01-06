@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import pika, sys, os
+import simplejson as json
 from DatabaseClient import databaseClient
 from APIClient import apiClient
 
 credentials = pika.PlainCredentials('admin', 'Group2mq')
-parameters = pika.ConnectionParameters('34.72.76.159' ,
-					 5672 ,
-					'IT490',
-					 credentials)
+parameters = pika.ConnectionParameters('34.72.76.159' , 5672 ,'IT490',credentials)
 connection = pika.BlockingConnection( pika.ConnectionParameters(host='localhost'))
 channel = connection.channel()
 channel.exchange_declare(exchange='BackEndExch', exchange_type='direct')
