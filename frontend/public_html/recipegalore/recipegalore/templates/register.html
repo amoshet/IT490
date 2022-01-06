@@ -9,23 +9,22 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
-<link rel="stylesheet" href="static/css/styles.css">
+<link rel="stylesheet" href="../static/styles.css">
 </head>
 
 
 <!-- navbar start -->
 <nav>
 <ul class="nav">
-    <li><a href="#">Home</a></li>
-    <li><a href="login.html">Login</a></li>
-    <li><a href="register.php">Register</a></li>
-</ul>
+    <li><a href="{{url_for('home')}}">Home</a></li>
+    <li><a href="{{url_for('login')}}">Login</a></li>
+    <li><a href="{{url_for('register')}}">Register</a></li></ul>
 </nav>
 <!-- navbar end -->
 
 <body>
 
-<!-- PHP END -->
+<!-- PHP START
 
 if (isset($_POST["register"])) {
     $email = null;
@@ -95,7 +94,7 @@ if (!isset($username)) {
     $username = "";
 }
 
-<!-- PHP END -->
+PHP END -->
 
 <form method="POST">
     <label for="email">Email:</label>
@@ -108,6 +107,8 @@ if (!isset($username)) {
     <input type="password" id="p2" name="confirm" required/>
     <input type="submit" name="register" value="Register"/>
 </form>
+
+<h3><center><br><a href="{{url_for('login')}}">Already have an account? Login</a></h3></center>
 
 </body>
 </html>

@@ -2,10 +2,10 @@
 import pika, sys, os
 import mysql-connector
 
-connection = pika.BlockingConnection( pika.ConnectionParameters(host='rabbitmq server ip address'))
-channel = connection.channel()
+credentials = pika.PlainCredentials('test', 'test')
+connection = pika.BlockingConnection(pika.ConnectionParameters('34.72.76.159',5672,'IT490',credentials))
 channel.exchange_declare(exchange='DatabaseExch', exchange_type='direct')
-channel.queue_declare(queue='DBServerqueue', exclusive=True)
+channel.queue_declare(queue='DBServerQueue', exclusive=True)
 channel.queue_bind(exchange='DatabaseExch', queue='DBServerQueue')
 
 def on_request(ch, method, props, body):
@@ -22,7 +22,7 @@ def on_request(ch, method, props, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
-channel.basic_consume(queue='DBServerqueue', on_message_callback=on_request)
+channel.basic_consume(queue='DBServerQueue', on_message_callback=on_request)
 
 print("Waiting for BackEnd Requests")
 channel.start_consuming()

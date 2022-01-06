@@ -1,18 +1,14 @@
 #!/usr/bin/env python
 import pika
 import uuid
+import simplejson as json
 
-credentials = pika.PlainCredentials('admin', 'Group2mq')
-parameters = pika.ConnectionParameters('34.72.76.159' , 
-                                         5672 ,
-                                        'IT490', 
-                                         credentials)
+
 class databaseClient(object):
 
 	def __init__(self):
-		self.connection = pika.BlockingConnection(
-			pika.ConnectionParameters(host='34.72.76.159'))
-
+		credentials = pika.PlainCredentials('test', 'test')
+		self.connection = pika.BlockingConnection( pika.ConnectionParameters('34.72.76.159' , 5672 ,'IT490',credentials))
 		self.channel = self.connection.channel()
 
 		result = self.channel.queue_declare(queue='', exclusive=True)
@@ -37,14 +33,14 @@ class databaseClient(object):
 				reply_to=self.callback_queue,
 				correlation_id=self.corr_id,
 			),
-			body=str(databaseMessage))
+			body = json.dumps(databaseMessage)) 
 		while self.response is None:
 			self.connection.process_data_events()
 		return int(self.response)
 
 
-databaseRPC = databaseClient()
+#databaseRPC = databaseClient()
 
-print("Sending over Database Exchange and queue")
-response = databaseRPC.call("hello") # HERE REPLACE "hello" with a variable, this variable will be what you are sending right now it is n
-print(" [.] Got %r" % response)
+#print("Sending over Database Exchange and queue")
+#response = databaseRPC.call(databaseMessage) 
+#print(" [.] Got %r" % response)
