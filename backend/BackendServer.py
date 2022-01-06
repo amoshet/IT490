@@ -1,18 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import pika, sys, os
+import simplejson as json
 from DatabaseClient import databaseClient
-from APIClient import apiClient
+from ApiClient import apiClient
 
-connection = pika.BlockingConnection( pika.ConnectionParameters(host='localhost'))
+credentials = pika.PlainCredentials('test', 'test')
+connection = pika.BlockingConnection(pika.ConnectionParameters('34.72.76.159',5672,'IT490',credentials))
 channel = connection.channel()
 channel.exchange_declare(exchange='BackEndExch', exchange_type='direct')
-channel.queue_declare(queue='BEServerqueue', exclusive=True)
+channel.queue_declare(queue='BEServerQueue', exclusive=True)
 channel.queue_bind(exchange='BackEndExch', queue='BEServerQueue')
+
+def tester():
+        variable = {'test': "goodbye"}
+        return variable
+
 
 def decider(type, rabbitMsg):
 	return{
-		'test' : lambda data : test(),
+		'test' : lambda data : tester(),
 		'login' : lambda data : loginFunc(rabbitMsg.get('email'), rabbitMsg.get('password')),
 #    		'allRecipes' : lambda data : allRecipes(rabbitMsq.get('search')),
 #		'searchRecipes' : lambda data : searchRecipes(rabbitMsg.get('search'))
@@ -20,11 +27,12 @@ def decider(type, rabbitMsg):
 	}.get(type)(rabbitMsg)
 
 def on_request(ch, method, props, body):
-    rabbitMSG = body
+    rabbitMSG = json.loads(body.decode('utf-8'))
 
     print(rabbitMSG)
     rabbitResponse = decider(rabbitMSG.get('type'), rabbitMSG)
-    frontendReturn = rabbitResponse
+    forJSON  = rabbitResponse
+    frontendReturn = json.JSONEncoder().encode(forJSON)
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,
                      properties=pika.BasicProperties(correlation_id = \
@@ -33,13 +41,13 @@ def on_request(ch, method, props, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
-channel.basic_consume(queue='BEServerqueue', on_message_callback=on_request)
+channel.basic_consume(queue='BEServerQueue', on_message_callback=on_request)
 
 print('Waiting for BackEnd Requests')
 channel.start_consuming()
 
-def test():
-	variable = "goodbye"
+def tester():
+	variable = {'test': "goodbye"}
 	return variable
 
 def loginFunc(email, password):

@@ -4,11 +4,12 @@ import uuid
 import simplejson as json
 
 
-class databaseClient(object):
+
+class apiClient(object):
 
 	def __init__(self):
 		credentials = pika.PlainCredentials('test', 'test')
-		self.connection = pika.BlockingConnection( pika.ConnectionParameters('34.72.76.159' , 5672 ,'IT490',credentials))
+		self.connection = pika.BlockingConnection(pika.ConnectionParameters('34.72.76.159',5672,'IT490',credentials))
 		self.channel = self.connection.channel()
 
 		result = self.channel.queue_declare(queue='', exclusive=True)
@@ -23,24 +24,24 @@ class databaseClient(object):
 		if self.corr_id == props.correlation_id:
 			self.response = body
 
-	def call(self, databaseMessage):
+	def call(self, apiInfo):
 		self.response = None
 		self.corr_id = str(uuid.uuid4())
 		self.channel.basic_publish(
-			exchange='DatabaseExch',
-			routing_key='DBqueue',
+			exchange='APIExch',
+			routing_key='APIqueue',
 			properties=pika.BasicProperties(
 				reply_to=self.callback_queue,
-				correlation_id=self.corr_id,
+ 				correlation_id=self.corr_id,
 			),
-			body = json.dumps(databaseMessage)) 
+			body = json.dumps(apiInfo))
 		while self.response is None:
 			self.connection.process_data_events()
 		return int(self.response)
 
 
-#databaseRPC = databaseClient()
+#apiRPC = apiClient()
 
-#print("Sending over Database Exchange and queue")
-#response = databaseRPC.call(databaseMessage) 
+#print("Sending over API Exchange and queue")
+#response = apiRPC.call("hello") 
 #print(" [.] Got %r" % response)
