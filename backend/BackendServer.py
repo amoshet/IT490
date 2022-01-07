@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.8
 # -*- coding: utf-8 -*-
 import pika, sys, os
 import simplejson as json
@@ -16,6 +16,36 @@ def tester():
         variable = {'test': "goodbye"}
         return variable
 
+def loginFunc(email, password):
+        try:
+                SQLquery = "select Password from UserAccounts where Username=%(email)%"
+                SQLparameters = {'email':email}
+                DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
+                DBclient = databaseClient()
+                DBresult = DBclient.call(DBpasser)
+                if DBresult.get('message' == password):
+                        print("login success!")
+                        return True
+                else:
+                        print("login failed!")
+                        return False
+        except:
+                print("Error in loginFunc")
+def registerFunc(email, password):
+        try:
+                SQLquery = "insert Email and Password from UserAccounts"
+                SQLparameters = {'email':email , 'password':password}
+                DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
+                DBclient = databaseClient()
+                DBresult = DBclient.call(DBpasser)
+                if DBresult.get('message' == password):
+                        print('Registration success!')
+                        return True
+                else:
+                        print('Registration failed!')
+                        return  False
+        except:
+                print("Error in registerFun")
 
 def decider(type, rabbitMsg):
 	return{
@@ -37,7 +67,7 @@ def on_request(ch, method, props, body):
                      routing_key=props.reply_to,
                      properties=pika.BasicProperties(correlation_id = \
                                                          props.correlation_id),
-                     body=str(frontendReturn))
+                     body=(frontendReturn)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
@@ -46,40 +76,6 @@ channel.basic_consume(queue='BEServerQueue', on_message_callback=on_request)
 print('Waiting for BackEnd Requests')
 channel.start_consuming()
 
-def tester():
-	variable = {'test': "goodbye"}
-	return variable
-
-def loginFunc(email, password):
-	try:
-		SQLquery = "select Password from UserAccounts where Username=%(email)%"
-		SQLparameters = {'email':email}
-		DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
-		DBclient = databaseClient()
-		DBresult = DBclient.call(DBpasser)
-		if DBresult.get('message' == password):
-			print("login success!")
-			return True
-		else:
-			print("login failed!")
-			return False
-	except:
-		print("Error in loginFunc")
-def registerFunc(email, password):
-	try:
-		SQLquery = "insert Email and Password from UserAccounts"
-		SQLparameters = {'email':email , 'password':password}
-		DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
-		DBclient = databaseClient()
-		DBresult = DBclient.call(DBpasser)
-		if DBresult.get('message' == password):
-			print('Registration success!')
-			return True
-		else:
-			print('Registration failed!')
-			return  False
-	except:
-		print("Error in registerFun")
 #def allRecipes(search)
 #	APIclient = apiClient()
 #	apiResponse = APIclient.call({
