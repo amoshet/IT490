@@ -1,4 +1,5 @@
 from frontendClient import backendClient
+import pika
 import flask
 from flask import Flask, url_for, redirect, render_template, request
 #import sys
@@ -22,18 +23,17 @@ def login():
 	if request.method == 'POST':
 		logemail = request.form['email']
 		logpass = request.form['password']
-		return redirect('/home', code=302)
+		#return redirect('/home', code=302)
 		#
 		dbchk = backendClient()
-		loginfo = dbchk.call({'type':'login', 'email':email, 'password':password})
-
-		if loginfo:
-			usrval = loginfo.get('result')
-			print(result)
-			return redirect('/home', code=302)
+		loginfo = dbchk.call({'type':'login', 'email':logemail, 'password':logpass})
+		#right now just returns whether successful or not
+		loginStatus = loginfo.get('result')
+		#return redirect('/home', code=302)
 		#
+		return flask.render_template("login.html", loginStatus)
 	else:
-		return flask.render_template('login.html', message="Please try again, account not found")
+		return flask.render_template('login.html')
 
 #TODO change to function that redirects if not logged in, and asks them to login first
 @app.route('/home')

@@ -31,9 +31,10 @@
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required/>
     <input type="submit" name="login" value="Login"/>
+
 </form>
 
-<h3><center><br><a href="{{url_for('register')}}">Need to make an account? Register</a></h3></center>
+<h3><center><br><a href="{{url_for('register')}}">Need to make an account? Register</a><br> {{loginStatus}}</h3></center>
 <!-- TODO 
 
 #amqp connection and sending message setup was here
