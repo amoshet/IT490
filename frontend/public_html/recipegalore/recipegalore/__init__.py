@@ -1,4 +1,4 @@
-#from frontendClient import backendClient
+from frontendClient import backendClient
 import flask
 from flask import Flask, url_for, redirect, render_template, request
 #import sys
@@ -23,15 +23,15 @@ def login():
 		logemail = request.form['email']
 		logpass = request.form['password']
 		return redirect('/home', code=302)
-		"""
-		dbchk = frontendClient()
+		#
+		dbchk = backendClient()
 		loginfo = dbchk.call({'type':'login', 'email':email, 'password':password})
 
 		if loginfo:
 			usrval = loginfo.get('result')
 			print(result)
 			return redirect('/home', code=302)
-		"""
+		#
 	else:
 		return flask.render_template('login.html', message="Please try again, account not found")
 
