@@ -33,8 +33,8 @@ def loginFunc(email, password):
                 print("Error in loginFunc")
 def registerFunc(email, password):
         try:
-                SQLquery = "CREATE USER Username IDENTIFIED BY Password"
-                SQLparameters = {'username':username , 'password':password}
+                SQLquery = "INSERT INTO 'login' (Username, Password) VALUES ('jack', 'OFF')"
+                SQLparameters = {'email':email , 'password':password}
                 DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
                 DBclient = databaseClient()
                 DBresult = DBclient.call(DBpasser)
