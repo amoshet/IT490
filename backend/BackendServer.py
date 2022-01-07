@@ -18,7 +18,7 @@ def tester():
 
 def loginFunc(email, password):
         try:
-                SQLquery = "select Password from UserAccounts where Username=%(email)%"
+                SQLquery = "SELECT Password from UserAccounts where Username=%(email)%"
                 SQLparameters = {'email':email}
                 DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
                 DBclient = databaseClient()
@@ -33,12 +33,12 @@ def loginFunc(email, password):
                 print("Error in loginFunc")
 def registerFunc(email, password):
         try:
-                SQLquery = "insert Email and Password from UserAccounts"
-                SQLparameters = {'email':email , 'password':password}
+                SQLquery = "CREATE USER username IDENTIFIED BY password"
+                SQLparameters = {'username':username , 'password':password}
                 DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
                 DBclient = databaseClient()
                 DBresult = DBclient.call(DBpasser)
-                if DBresult.get('message' == password):
+                if DBresult.get('message' == username):
                         print('Registration success!')
                         return True
                 else:
