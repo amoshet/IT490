@@ -68,7 +68,7 @@ def on_request(ch, method, props, body):
                      routing_key=props.reply_to,
                      properties=pika.BasicProperties(correlation_id = \
                                                          props.correlation_id),
-                     body=(frontendReturn),
+                     body=(frontendReturn))
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
@@ -77,26 +77,33 @@ channel.basic_consume(queue='BEServerQueue', on_message_callback=on_request)
 print('Waiting for BackEnd Requests')
 channel.start_consuming()
 
-def getAuto(search)
-	APIclient = apiClient()
-	apiResponse = APIclient.call({
-	'type': 'getAuto',
-	'query' : search})
-	print(apiResponse)
-	return apiResponse
-
-def getList(search)
-	APIclient = apiClient()
-	apiResponse = APIclient.call({
-	'type': 'getList',
-	'query' : search})
-	print(apiResponse)
-	return apiResponse
-
+def getAuto(search):
+	try:
+		APIclient = apiClient()
+		apiResponse = APIclient.call({
+		'type': 'getAuto',
+		'query' : search})
+		print(apiResponse)
+		return apiResponse
+	except:
+		print("Error in getAuto API function")
+def getList(search):
+	try:
+		APIclient = apiClient()
+		apiResponse = APIclient.call({
+		'type': 'getList',
+		'query' : search})
+		print(apiResponse)
+		return apiResponse
+	except:
+		print("Error in getList API function")
 def getDetail(search):
-	APIclient = apiClient()
-	apiResponse = APIclient.call({
-	'type': 'getDetail',
-	'query' : search})
-	print(apiResponse)
-	return apiResponse
+	try:
+		APIclient = apiClient()
+		apiResponse = APIclient.call({
+		'type': 'getDetail',
+		'query' : search})
+		print(apiResponse)
+		return apiResponse
+	except:
+		print("Error in getDetail API funtion")
