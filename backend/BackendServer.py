@@ -18,7 +18,7 @@ def tester():
 
 def loginFunc(email, password):
         try:
-                SQLquery = "SELECT Password from Login  where Username=%(email)%"
+                SQLquery = "SELECT Password from login  where Username=%(email)%"
                 SQLparameters = {'email':email}
                 DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
                 DBclient = databaseClient()
