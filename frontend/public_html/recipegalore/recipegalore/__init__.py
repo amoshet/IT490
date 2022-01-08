@@ -31,6 +31,7 @@ def login():
 		loginStatus = loginfo.get('result')
 		#return redirect('/home', code=302)
 		#
+		#return redirect('/home', code=302)
 		return flask.render_template("login.html", loginStatus)
 	else:
 		return flask.render_template('login.html')
