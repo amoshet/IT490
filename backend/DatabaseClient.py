@@ -28,7 +28,7 @@ class databaseClient(object):
 		self.corr_id = str(uuid.uuid4())
 		self.channel.basic_publish(
 			exchange='DatabaseExch',
-			routing_key='DBQueue',
+			routing_key='DBServerQueue',
 			properties=pika.BasicProperties(
 				reply_to=self.callback_queue,
 				correlation_id=self.corr_id,
