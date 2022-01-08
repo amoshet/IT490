@@ -17,41 +17,46 @@ def tester():
         return variable
 
 def loginFunc(email, password):
-        try:
-                SQLquery = "SELECT Password from 'login'  where Username=%(email)%"
-                SQLparameters = {'email':email}
-                DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
+        #try:
+                #SQLquery = "SELECT Password FROM login WHERE Username=(email) VALUES (%s);"
+                SQLparameters = email
+                #DBpasser = {'query': "SELECT Password FROM login WHERE Username=%(email)%;" , 'parameters':{'email' : SQLparameters}}
+                #DBjson = json.dumps(DBpasser)
                 DBclient = databaseClient()
-                DBresult = DBclient.call(DBpasser)
-                if DBresult.get('message' == password):
+                DBresult = DBclient.call({'query': "SELECT Password FROM login WHERE Username=%(email)s", 'parameters' : {'email' : email}})
+                #decoded = json.loads(DBresult.decode('utf-8'))
+                print(DBresult)
+                if DBresult.get('message') == password:
                         print("login success!")
-                        return True
+                        returner = "Login Success!"
+                        return {'result' : returner}
                 else:
                         print("login failed!")
-                        return False
-        except:
-                print("Error in loginFunc")
+                        returner = "Login failed!"
+                        return {'result' : returner}
+        #except:
+                #print("Error in loginFunc")
+                #returner = "Login Error!"
+                return {'result' : returner}
 def registerFunc(email, password):
         try:
-                SQLquery = "INSERT INTO 'login' (Username, Password) VALUES ('jack', 'OFF')"
+                #SQLquery = "INSERT INTO login (Username, Password) VALUES (%(email)%,%(password)%);"
                 SQLparameters = {'email':email , 'password':password}
-                DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
+                #DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
                 DBclient = databaseClient()
-                DBresult = DBclient.call(DBpasser)
-                if DBresult.get('message' == username):
-                        print('Registration success!')
-                        return True
-                else:
-                        print('Registration failed!')
-                        return  False
+                DBresult = DBclient.call({'query': "INSERT INTO login (Username, Password) VALUE (%(email)s, %(password)s);", 'parameters' : SQLparameters})
+                returner = "Registration Complete"
+                return {'result' : returner}
         except:
                 print("Error in registerFun")
+                return {'result' : "Registration Failed"}
 
 def decider(type, rabbitMsg):
 	return{
 		'test' : lambda data : tester(),
 		'login' : lambda data : loginFunc(rabbitMsg.get('email'), rabbitMsg.get('password')),
-		'getAuto' : lambda data : getAuto(rabbitMsq.get('search')),
+                'register' : lambda data: registerFunc(rabbitMsg.get('email'), rabbitMsg.get('password')),
+                'getAuto' : lambda data : getAuto(rabbitMsq.get('search')),
 		'getList' : lambda data : getList(rabbitMsg.get('search')),
 		'getDetail' : lambda data : getDetail(rabbitMsg.get('search'))
 
@@ -68,7 +73,7 @@ def on_request(ch, method, props, body):
                      routing_key=props.reply_to,
                      properties=pika.BasicProperties(correlation_id = \
                                                          props.correlation_id),
-                     body=(frontendReturn))
+                     body=frontendReturn)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
