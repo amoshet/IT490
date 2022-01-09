@@ -23,15 +23,13 @@ def login():
 	if request.method == 'POST':
 		logemail = request.form['email']
 		logpass = request.form['password']
-		#return redirect('/home', code=302)
-		#
 		dbchk = backendClient()
+		#sends login info to backend/db
 		loginfo = dbchk.call({'type':'login', 'email':logemail, 'password':logpass})
 		#right now just returns whether successful or not
+		#TODO have it redirect to home and spit out the email
+		# +  saying welcome to the website
 		loginStatus = loginfo.get('result')
-		#return redirect('/home', code=302)
-		#
-		#return redirect('/home', code=302)
 		return flask.render_template("login.html", loginStatus)
 	else:
 		return flask.render_template('login.html')
@@ -42,25 +40,19 @@ def register():
 		regemail = request.form['email']
 		regpass = request.form['p1']
 		regpass2 = request.form['p2']
+		#makes sure passwords match when registering user
+		#TODO redirect to register again, but tell user passwords 
+		# + do not match
 		if regpass2 != regpass:
 			return redirect('/index', code=302)
 		dbchk2 = backendClient()
-                reginfo = dbchk2.call({'type':'register', 'email':regemail, 'password':regpass})
+		#sends register info to backend/db
+		reginfo = dbchk2.call({'type':'register', 'email':regemail, 'password':regpass})
+		#right now just returns whether successful or not
+		#TODO have it redirect to login and say register successful
+                #TODO please login
 		regStatus = reginfo.get('result')
 		return flask.render_template("register.html", regStatus)
-		
-		"""
-		#if regpass2 != regpass:
-		#	return flask.render_template('home.html')
-		dbchk = backendClient()
-		reginfo = dbchk.call({'type':'register', 'email':regemail, 'password':regpass})
-                #right now just returns whether successful or not
-		regStatus = reginfo.get('result')
-                #return redirect('/home', code=302)
-                #
-                #return redirect('/home', code=302)
-		return flask.render_template('register.html', regStatus)
-		"""
 	else:
 		return flask.render_template('register.html')
 #TODO change to function that redirects if not logged in, and asks them to login first
@@ -68,16 +60,7 @@ def register():
 def home():
     return flask.render_template("home.html")
 
-#TODO function that if register.submit is pressed and db comes back true, redirect to home
-#@app.route('/register')
-#def register():
-#    return flask.render_template("register.html")
-
 #TODO add function for recipe search
-
-
-
-
 
 if __name__ == "__main__":
     app.run()
