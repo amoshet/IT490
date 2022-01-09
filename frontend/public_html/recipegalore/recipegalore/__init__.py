@@ -44,8 +44,11 @@ def register():
 		regpass2 = request.form['p2']
 		if regpass2 != regpass:
 			return redirect('/index', code=302)
-		else:
-			return redirect('/home', code=302)
+		dbchk2 = backendClient()
+                reginfo = dbchk2.call({'type':'register', 'email':regemail, 'password':regpass})
+		regStatus = reginfo.get('result')
+		return flask.render_template("register.html", regStatus)
+		
 		"""
 		#if regpass2 != regpass:
 		#	return flask.render_template('home.html')
