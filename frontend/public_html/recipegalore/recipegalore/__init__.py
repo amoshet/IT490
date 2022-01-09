@@ -2,10 +2,6 @@ from frontendClient import backendClient
 import pika
 import flask
 from flask import Flask, url_for, redirect, render_template, request, flash
-#import sys
-#sys.path.insert(0, '/home/ahmed_moshet/IT490/frontend/public_html/recipegalore/recipegalore/')
-#import frontendclient
-
 
 app = Flask(__name__)
 
@@ -44,7 +40,8 @@ def register():
 		#TODO redirect to register again, but tell user passwords 
 		# + do not match
 		if regpass2 != regpass:
-			return redirect('/index', code=302)
+			flash('Passwords do not match')
+			#return redirect('/index', code=302)
 		dbchk2 = backendClient()
 		#sends register info to backend/db
 		reginfo = dbchk2.call({'type':'register', 'email':regemail, 'password':regpass})
@@ -64,4 +61,3 @@ def home():
 
 if __name__ == "__main__":
     app.run()
-
