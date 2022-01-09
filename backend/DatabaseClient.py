@@ -36,7 +36,7 @@ class databaseClient(object):
 			body = json.dumps(databaseMessage)) 
 		while self.response is None:
 			self.connection.process_data_events()
-		return int(self.response)
+		return (self.response)
 
 
 #databaseRPC = databaseClient()

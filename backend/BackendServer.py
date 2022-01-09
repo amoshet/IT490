@@ -44,7 +44,7 @@ def registerFunc(email, password):
                 SQLparameters = {'email':email , 'password':password}
                 #DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
                 DBclient = databaseClient()
-                DBresult = DBclient.call({'query': "INSERT INTO login (Username, Password) VALUE (%(email)s, %(password)s);", 'parameters' : SQLparameters})
+                DBresult = DBclient.call({'query': "INSERT INTO login (Username, Password) VALUE (%(email)s, %(password)s)", 'parameters' : SQLparameters})
                 returner = "Registration Complete"
                 return {'result' : returner}
         except:
