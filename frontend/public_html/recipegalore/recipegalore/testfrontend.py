@@ -3,6 +3,7 @@ import pika
 import flask
 from flask import Flask, url_for, redirect, render_template, request, flash
 
+#this line is only for this test environment
 app = Flask(__name__)
 app.secret_key = 'shh'
 
@@ -61,7 +62,7 @@ def register():
 		regStatus = reginfo.get('result')
 		if regStatus == 'Registration Complete':
 			flash('Registration successful, Please login for the first time')
-                        return redirect('/login', code=302)
+			return redirect('/login', code=302)
 		elif regStatus == 'Registration Failed':
 			flash('Email already in use, please login with your account, or create a new one')
 			return redirect('/register', code=302)
