@@ -42,6 +42,11 @@ def register():
 		regemail = request.form['email']
 		regpass = request.form['p1']
 		regpass2 = request.form['p2']
+		if regpass2 != regpass:
+			return redirect('/index', code=302)
+		else:
+			return redirect('/home', code=302)
+		"""
 		#if regpass2 != regpass:
 		#	return flask.render_template('home.html')
 		dbchk = backendClient()
@@ -52,6 +57,7 @@ def register():
                 #
                 #return redirect('/home', code=302)
 		return flask.render_template('register.html', regStatus)
+		"""
 	else:
 		return flask.render_template('register.html')
 #TODO change to function that redirects if not logged in, and asks them to login first
