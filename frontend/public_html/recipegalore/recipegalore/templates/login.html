@@ -25,15 +25,36 @@
 <!-- navbar end -->
 
 <body>
+
+<!-- flash msg start -->
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %} {% if category == 'error' %}
+<div class="alert alert-danger alter-dismissable fade show" role="alert">
+  {{ message }}
+  <button type="button" class="close" data-dismiss="alert">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% else %}
+<div class="alert alert-success alter-dismissable fade show" role="alert">
+  {{ message }}
+  <button type="button" class="close" data-dismiss="alert">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %} {% endfor %} {% endif %} {% endwith %}
+<!-- flash msg end -->
+
+
 <form method="POST">
-    <label for="email">Email/Username:</label>
-    <input type="text" name="email" required/>
-    <label for="p1">Password:</label>
-    <input type="password" id="p1" name="password" required/>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required/>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required/>
     <input type="submit" name="login" value="Login"/>
+
 </form>
 
-<h3><center><br><a href="{{url_for('register')}}">Need to make an account? Register</a></h3></center>
+<h3><center><br><a href="{{url_for('register')}}">Need to make an account? Register</a><br> {{loginStatus}}</h3></center>
 <!-- TODO 
 
 #amqp connection and sending message setup was here

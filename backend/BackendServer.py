@@ -1,5 +1,6 @@
 #!/usr/bin/env python3.8
 # -*- coding: utf-8 -*-
+import codecs
 import pika, sys, os
 import simplejson as json
 from DatabaseClient import databaseClient
@@ -18,48 +19,56 @@ def tester():
 
 def loginFunc(email, password):
         try:
-                SQLquery = "SELECT Password from 'login'  where Username=%(email)%"
-                SQLparameters = {'email':email}
-                DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
+                #SQLquery = "SELECT Password FROM login WHERE Username=(email) VALUES (%s);"
+                SQLparameters = {'email':email , 'password':password}
+                #DBpasser = {'query': "SELECT Password FROM login WHERE Username=%(email)%;" , 'parameters':{'email' : SQLparameters}}
+                #DBjson = json.dumps(DBpasser)
                 DBclient = databaseClient()
-                DBresult = DBclient.call(DBpasser)
-                if DBresult.get('message' == password):
+                DBresult = DBclient.call({'query':"SELECT COUNT(Password) FROM login WHERE Username = %(email)s AND Password = %(password)s", 'parameters' : {'email' : email, 'password' : password}})
+                #DBresult = DBclient.call({'query':"SELECT Username, Password FROM login WHERE Username=%(email)s", 'parameters' : {'email' : email, 'password' : password}})
+                # decoded = json.loads(DBresult.decode('utf-8'))
+                DBresult2 = str(DBresult)
+                print(DBresult2)
+                print(DBresult)
+                if DBresult > 0:
                         print("login success!")
-                        return True
+                        returner = "Login Success!"
+                        return {'result' : returner}
                 else:
                         print("login failed!")
-                        return False
+                        returner = "Login failed!"
+                       # return {'result' : returner}
         except:
                 print("Error in loginFunc")
+                returner = "Login failed!"
+                return {'result' : returner}
 def registerFunc(email, password):
         try:
-                SQLquery = "CREATE USER Username IDENTIFIED BY Password"
-                SQLparameters = {'username':username , 'password':password}
-                DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
+                #SQLquery = "INSERT INTO login (Username, Password) VALUES (%(email)%,%(password)%);"
+                SQLparameters = {'email':email , 'password':password}
+                #DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
                 DBclient = databaseClient()
-                DBresult = DBclient.call(DBpasser)
-                if DBresult.get('message' == username):
-                        print('Registration success!')
-                        return True
-                else:
-                        print('Registration failed!')
-                        return  False
+                DBresult = DBclient.call({'query': "INSERT INTO login (Username, Password) VALUE (%(email)s, %(password)s)", 'parameters' : SQLparameters})
+                returner = "Registration Complete"
+                return {'result' : returner}
         except:
                 print("Error in registerFun")
+                return {'result' : "Registration Failed"}
 
 def decider(type, rabbitMsg):
 	return{
 		'test' : lambda data : tester(),
 		'login' : lambda data : loginFunc(rabbitMsg.get('email'), rabbitMsg.get('password')),
-		'getAuto' : lambda data : getAuto(rabbitMsq.get('search')),
+                'register' : lambda data: registerFunc(rabbitMsg.get('email'), rabbitMsg.get('password')),
+                'getAuto' : lambda data : getAuto(rabbitMsq.get('search')),
 		'getList' : lambda data : getList(rabbitMsg.get('search')),
 		'getDetail' : lambda data : getDetail(rabbitMsg.get('search'))
 
 	}.get(type)(rabbitMsg)
 
 def on_request(ch, method, props, body):
-    rabbitMSG = json.loads(body.decode('utf-8'))
-
+    codecs.register(lambda name: codecs.lookup('utf8') if name == 'utf8mb4' else None)
+    rabbitMSG = json.loads(body.decode('utf8mb4'))
     print(rabbitMSG)
     rabbitResponse = decider(rabbitMSG.get('type'), rabbitMSG)
     forJSON  = rabbitResponse
@@ -68,7 +77,7 @@ def on_request(ch, method, props, body):
                      routing_key=props.reply_to,
                      properties=pika.BasicProperties(correlation_id = \
                                                          props.correlation_id),
-                     body=(frontendReturn))
+                     body=frontendReturn)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)

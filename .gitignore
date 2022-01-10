@@ -1,2 +1,4 @@
 x.html
 *.txt
+*.swp
+**/__pycache__/
