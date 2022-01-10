@@ -24,7 +24,8 @@ def loginFunc(email, password):
                 #DBpasser = {'query': "SELECT Password FROM login WHERE Username=%(email)%;" , 'parameters':{'email' : SQLparameters}}
                 #DBjson = json.dumps(DBpasser)
                 DBclient = databaseClient()
-                DBresult = DBclient.call({'query':"SELECT Username, Password FROM login WHERE Username=%(email)s", 'parameters' : {'email' : email, 'password' : password}})
+                DBresult = DBclient.call({'query':"SELECT COUNT(Password) FROM login WHERE Username = %(email)s AND Password = %(password)s", 'parameters' : {'email' : email, 'password' : password}})
+                #DBresult = DBclient.call({'query':"SELECT Username, Password FROM login WHERE Username=%(email)s", 'parameters' : {'email' : email, 'password' : password}})
                 # decoded = json.loads(DBresult.decode('utf-8'))
                 DBresult2 = str(DBresult)
                 print(DBresult2)
