@@ -18,7 +18,7 @@ def tester():
         return variable
 
 def loginFunc(email, password):
-        #try:
+        try:
                 #SQLquery = "SELECT Password FROM login WHERE Username=(email) VALUES (%s);"
                 SQLparameters = {'email':email , 'password':password}
                 #DBpasser = {'query': "SELECT Password FROM login WHERE Username=%(email)%;" , 'parameters':{'email' : SQLparameters}}
@@ -37,10 +37,10 @@ def loginFunc(email, password):
                 else:
                         print("login failed!")
                         returner = "Login failed!"
-                        return {'result' : returner}
-        #except:
-                #print("Error in loginFunc")
-                #returner = "Login Error!"
+                       # return {'result' : returner}
+        except:
+                print("Error in loginFunc")
+                returner = "Login failed!"
                 return {'result' : returner}
 def registerFunc(email, password):
         try:
