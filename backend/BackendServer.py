@@ -1,5 +1,6 @@
 #!/usr/bin/env python3.8
 # -*- coding: utf-8 -*-
+import codecs
 import pika, sys, os
 import simplejson as json
 from DatabaseClient import databaseClient
@@ -17,26 +18,29 @@ def tester():
         return variable
 
 def loginFunc(email, password):
-        #try:
+        try:
                 #SQLquery = "SELECT Password FROM login WHERE Username=(email) VALUES (%s);"
-                SQLparameters = email
+                SQLparameters = {'email':email , 'password':password}
                 #DBpasser = {'query': "SELECT Password FROM login WHERE Username=%(email)%;" , 'parameters':{'email' : SQLparameters}}
                 #DBjson = json.dumps(DBpasser)
                 DBclient = databaseClient()
-                DBresult = DBclient.call({'query': "SELECT Password FROM login WHERE Username=%(email)s", 'parameters' : {'email' : email}})
-                #decoded = json.loads(DBresult.decode('utf-8'))
+                DBresult = DBclient.call({'query':"SELECT COUNT(Password) FROM login WHERE Username = %(email)s AND Password = %(password)s", 'parameters' : {'email' : email, 'password' : password}})
+                #DBresult = DBclient.call({'query':"SELECT Username, Password FROM login WHERE Username=%(email)s", 'parameters' : {'email' : email, 'password' : password}})
+                # decoded = json.loads(DBresult.decode('utf-8'))
+                DBresult2 = str(DBresult)
+                print(DBresult2)
                 print(DBresult)
-                if DBresult.get('message') == password:
+                if DBresult > 0:
                         print("login success!")
                         returner = "Login Success!"
                         return {'result' : returner}
                 else:
                         print("login failed!")
                         returner = "Login failed!"
-                        return {'result' : returner}
-        #except:
-                #print("Error in loginFunc")
-                #returner = "Login Error!"
+                       # return {'result' : returner}
+        except:
+                print("Error in loginFunc")
+                returner = "Login failed!"
                 return {'result' : returner}
 def registerFunc(email, password):
         try:
@@ -63,8 +67,8 @@ def decider(type, rabbitMsg):
 	}.get(type)(rabbitMsg)
 
 def on_request(ch, method, props, body):
-    rabbitMSG = json.loads(body.decode('utf-8'))
-
+    codecs.register(lambda name: codecs.lookup('utf8') if name == 'utf8mb4' else None)
+    rabbitMSG = json.loads(body.decode('utf8mb4'))
     print(rabbitMSG)
     rabbitResponse = decider(rabbitMSG.get('type'), rabbitMSG)
     forJSON  = rabbitResponse
