@@ -3,4 +3,5 @@ import sys
 sys.path.insert(0,"/home/ahmed_moshet/IT490/frontend/public_html/recipegalore")
 
 from recipegalore import app as application
+from frontendClient import backendClient
 application.secret_key = 'shh'

@@ -3,7 +3,9 @@ import pika
 import flask
 from flask import Flask, url_for, redirect, render_template, request, flash
 
+#this line is only for this test environment
 app = Flask(__name__)
+app.secret_key = 'shh'
 
 @app.route("/")
 def default():
@@ -13,6 +15,7 @@ def default():
 def index():
 	return flask.render_template("index.html")
 
+#TODO function that if register.submit is pressed and db comes back true, redirect to home
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if request.method == 'POST':
@@ -68,7 +71,6 @@ def register():
 			return redirect('/register', code=302)
 	else:
 		return flask.render_template('register.html')
-
 #TODO change to function that redirects if not logged in, and asks them to login first
 @app.route('/home')
 def home():
@@ -77,4 +79,4 @@ def home():
 #TODO add function for recipe search
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=5001)
