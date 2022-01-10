@@ -1,5 +1,4 @@
 #!/usr/bin/env python3.8
-import pika, sys, os
 import mysql.connector
 import simplejson as json
 
@@ -11,39 +10,39 @@ channel.queue_declare(queue='DBServerQueue', exclusive=True)
 channel.queue_bind(exchange='DatabaseExch', queue='DBServerQueue')
 
 def executeSQL(query, parameters):
-	mydb = mysql.connector.connect(
-	host="localhost",
-	user="root",
-	password="it490",
-	database="fp77"
-	)
+        mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="it490",
+        database="fp77"
+        )
 
-	mycursor = mydb.cursor()
-	mycursor.execute(query, parameters)
-	print (mycursor)
-	myresult = mycursor.fetchall()
-	#while myresult is not None:
-	mydb.commit()
+        mycursor = mydb.cursor()
+        mycursor.execute(query, parameters)
+        print (mycursor)
+        #myresult = mycursor.fetchall()
+        row = mycursor.fetchall()
+        for row in mycursor:
+                caption = row[0].decode()
+                return (caption)
+
+        mydb.commit()
 
 def on_request(ch, method, props, body):
-	rabbitMSG = json.loads(body.decode('utf8'))
-	print(rabbitMSG)
-	rabbitResponse = executeSQL(rabbitMSG.get('query'), rabbitMSG.get('parameters'))
-	forJSON  = rabbitResponse
-	frontendReturn = json.JSONEncoder().encode(forJSON)
-	ch.basic_publish(exchange='',
-		routing_key=props.reply_to,
-		properties=pika.BasicProperties(correlation_id = \
-			props.correlation_id),
-		body=frontendReturn)
-	ch.basic_ack(delivery_tag=method.delivery_tag)
+        rabbitMSG = json.loads(body.decode('utf8'))
+        print(rabbitMSG)
+        rabbitResponse = executeSQL(rabbitMSG.get('query'), rabbitMSG.get('parameters'))
+        forJSON  = rabbitResponse
+        frontendReturn = json.JSONEncoder().encode(forJSON)
+        ch.basic_publish(exchange='',
+                routing_key=props.reply_to,
+                properties=pika.BasicProperties(correlation_id = \
+                        props.correlation_id),
+                body=frontendReturn)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
 channel.basic_consume(queue='DBServerQueue', on_message_callback=on_request)
 
 print("Waiting for Database Requests")
 channel.start_consuming()
-
-
-
-
