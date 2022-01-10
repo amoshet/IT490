@@ -20,19 +20,13 @@ def executeSQL(query, parameters):
 
 	mycursor = mydb.cursor()
 	mycursor.execute(query, parameters)
+	print (mycursor)
 	myresult = mycursor.fetchall()
-	splitter = myresult.split()
-	print (splitter)
-	myresult = myresult.replace("('", "")
-	myresult = myresult.replace("',)", "")
-	#myresult = myresult.split()
-	print (myresult[0])
-	variablee = {'message': myresult}
-	return variablee
+	#while myresult is not None:
+	mydb.commit()
 
 def on_request(ch, method, props, body):
-	rabbitMSG = json.loads(body.decode('utf-8'))
-
+	rabbitMSG = json.loads(body.decode('utf8'))
 	print(rabbitMSG)
 	rabbitResponse = executeSQL(rabbitMSG.get('query'), rabbitMSG.get('parameters'))
 	forJSON  = rabbitResponse
