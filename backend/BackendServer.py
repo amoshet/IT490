@@ -30,7 +30,8 @@ def loginFunc(email, password):
                 # decoded = json.loads(DBresult.decode('utf-8'))
                 print(DBresult)
                 print(password)
-                if DBresult == password:
+                DBstatus = DBresult.strip('\"')
+                if DBstatus == password:
                         print("login success!")
                         returner = "Login Success!"
                         return(returner)
@@ -50,10 +51,11 @@ def registerFunc(email, password):
                 DBclient = databaseClient()
                 DBresult = DBclient.call({'query': "INSERT INTO login (Username, Password) VALUE (%(email)s, %(password)s)", 'parameters' : SQLparameters})
                 returner = "Registration Complete"
-                return {'result' : returner}
+                return(returner)
         except:
                 print("Error in registerFun")
-                return {'result' : "Registration Failed"}
+                returner = "Registration Failed"
+                return(returner)
 
 def decider(type, rabbitMsg):
 	return{
@@ -72,12 +74,11 @@ def on_request(ch, method, props, body):
     print(rabbitMSG)
     rabbitResponse = decider(rabbitMSG.get('type'), rabbitMSG)
     #forJSON  = rabbitResponse
-    frontendReturn = json.loads(forJSON)
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,
                      properties=pika.BasicProperties(correlation_id = \
                                                          props.correlation_id),
-                     body=frontendReturn)
+                     body=json.dumps(rabbitResponse))
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
