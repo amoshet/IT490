@@ -38,10 +38,3 @@ class apiClient(object):
 		while self.response is None:
 			self.connection.process_data_events()
 		return int(self.response)
-
-
-#apiRPC = apiClient()
-
-#print("Sending over API Exchange and queue")
-#response = apiRPC.call("hello") 
-#print(" [.] Got %r" % response)

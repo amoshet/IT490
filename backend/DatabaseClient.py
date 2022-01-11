@@ -39,8 +39,3 @@ class databaseClient(object):
 		return (self.response)
 
 
-#databaseRPC = databaseClient()
-
-#print("Sending over Database Exchange and queue")
-#response = databaseRPC.call(databaseMessage) 
-#print(" [.] Got %r" % response)

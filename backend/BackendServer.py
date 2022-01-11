@@ -20,17 +20,13 @@ def tester():
 
 def loginFunc(email, password):
        try:
-                #SQLquery = "SELECT Password FROM login WHERE Username=(email) VALUES (%s);"
                 SQLparameters = {'email':email , 'password':password}
-                #DBpasser = {'query': "SELECT Password FROM login WHERE Username=%(email)%;" , 'parameters':{'email' : SQLparameters}}
-                #DBjson = json.dumps(DBpasser)
                 DBclient = databaseClient()
-                #DBresult = DBclient.call({'query':"SELECT COUNT(Password) FROM login WHERE Username = %(email)s AND Password = %(password)s", 'parameters' : {'email' : email, 'password' : password}})
                 DBresult = DBclient.call({'query':"SELECT Username, Password FROM login WHERE Username=%(email)s", 'parameters' : {'email' : email, 'password' : password}}).decode()
-                # decoded = json.loads(DBresult.decode('utf-8'))
                 print(DBresult)
                 print(password)
-                if DBresult == password:
+                DBstatus = DBresult.strip('\"')
+                if DBstatus == password:
                         print("login success!")
                         returner = "Login Success!"
                         return(returner)
@@ -44,16 +40,15 @@ def loginFunc(email, password):
                 return(returner)
 def registerFunc(email, password):
         try:
-                #SQLquery = "INSERT INTO login (Username, Password) VALUES (%(email)%,%(password)%);"
                 SQLparameters = {'email':email , 'password':password}
-                #DBpasser = {'query':SQLquery , 'parameters':SQLparameters}
                 DBclient = databaseClient()
                 DBresult = DBclient.call({'query': "INSERT INTO login (Username, Password) VALUE (%(email)s, %(password)s)", 'parameters' : SQLparameters})
                 returner = "Registration Complete"
-                return {'result' : returner}
+                return(returner)
         except:
                 print("Error in registerFun")
-                return {'result' : "Registration Failed"}
+                returner = "Registration Failed"
+                return(returner)
 
 def decider(type, rabbitMsg):
 	return{
@@ -67,17 +62,14 @@ def decider(type, rabbitMsg):
 	}.get(type)(rabbitMsg)
 
 def on_request(ch, method, props, body):
-    #codecs.register(lambda name: codecs.lookup('utf8') if name == 'utf8mb4' else None)
     rabbitMSG = json.loads(body.decode('utf8'))
     print(rabbitMSG)
     rabbitResponse = decider(rabbitMSG.get('type'), rabbitMSG)
-    #forJSON  = rabbitResponse
-    frontendReturn = json.loads(forJSON)
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,
                      properties=pika.BasicProperties(correlation_id = \
                                                          props.correlation_id),
-                     body=frontendReturn)
+                     body=json.dumps(rabbitResponse))
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
