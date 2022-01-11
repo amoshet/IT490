@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.8
 import mysql.connector
 import simplejson as json
+import pika, sys, os
 
 credentials = pika.PlainCredentials('test', 'test')
 connection = pika.BlockingConnection(pika.ConnectionParameters('34.72.76.159',5672,'IT490',credentials))
@@ -21,10 +22,8 @@ def executeSQL(query, parameters):
         mycursor.execute(query, parameters)
         print (mycursor)
         #myresult = mycursor.fetchall()
-        row = mycursor.fetchall()
         for row in mycursor:
-                caption = row[0].decode()
-                return (caption)
+                return (row[1])
 
         mydb.commit()
 
