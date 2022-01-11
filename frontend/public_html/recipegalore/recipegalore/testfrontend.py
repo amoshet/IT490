@@ -2,6 +2,7 @@ from frontendClient import backendClient
 import pika
 import flask
 from flask import Flask, url_for, redirect, render_template, request, flash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 #this line is only for this test environment
 app = Flask(__name__)
@@ -23,11 +24,12 @@ def login():
 		logpass = request.form['password']
 		dbchk = backendClient()
 		#sends login info to backend/db
-		loginfo = dbchk.call({'type':'login', 'email':logemail, 'password':logpass})
+		loginfo = dbchk.call({'type':'login', 'email':logemail, 'password':logpass}).decode()
 		#right now just returns whether successful or not
 		#TODO have it redirect to home and spit out the email
 		# +  saying welcome to the website
-		loginStatus = loginfo.get('result')
+		loginStatus = loginfo.strip('\"')
+		print(loginStatus)
 		if loginStatus == 'Login Success!':
 			flash('Login successful, Welcome back!')
 			return redirect('/home', code=302)
@@ -55,11 +57,12 @@ def register():
 			return redirect('/register', code=302)
 		dbchk2 = backendClient()
 		#sends register info to backend/db
-		reginfo = dbchk2.call({'type':'register', 'email':regemail, 'password':regpass})
+		reginfo = dbchk2.call({'type':'register', 'email':regemail, 'password':regpass}).decode()
 		#right now just returns whether successful or not
 		#TODO have it redirect to login and say register successful
                 #TODO please login
-		regStatus = reginfo.get('result')
+		regStatus = reginfo.strip('\"')
+		print(regStatus)
 		if regStatus == 'Registration Complete':
 			flash('Registration successful, Please login for the first time')
 			return redirect('/login', code=302)
@@ -79,4 +82,4 @@ def home():
 #TODO add function for recipe search
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5001)
+    app.run(host='0.0.0.0', port=5001, debug=True)
