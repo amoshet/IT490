@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.8
 # -*- coding: utf-8 -*-
 import codecs
+from werkzeug.security import generate_password_hash, check_password_hash
 import pickle
 import pika, sys, os
 import simplejson as json
@@ -13,7 +14,6 @@ channel = connection.channel()
 channel.exchange_declare(exchange='BackEndExch', exchange_type='direct')
 channel.queue_declare(queue='BEServerQueue', exclusive=True)
 channel.queue_bind(exchange='BackEndExch', queue='BEServerQueue')
-
 def tester():
         variable = {'test': "goodbye"}
         return variable
