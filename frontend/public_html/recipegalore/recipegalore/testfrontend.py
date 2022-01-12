@@ -16,6 +16,10 @@ def default():
 def index():
 	return flask.render_template("index.html")
 
+@app.route('/search')
+def index():
+        return flask.render_template("search.html")
+
 #TODO function that if register.submit is pressed and db comes back true, redirect to home
 @app.route('/login', methods=['GET', 'POST'])
 def login():
