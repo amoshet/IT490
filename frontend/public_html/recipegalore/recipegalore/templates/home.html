@@ -18,8 +18,8 @@
 <nav>
 <ul class="nav">
     <li><a href="{{url_for('home')}}">Home</a></li>
-    <li><a href="{{url_for('login')}}">Login</a></li>
-    <li><a href="{{url_for('register')}}">Register</a></li></ul>
+    <li><a href="{{url_for('search')}}">Search</a></li>
+    <li><a href="{{url_for('index')}}">Logout</a></li></ul>
 </nav>
 
 <body>
@@ -42,17 +42,6 @@
 {% endif %} {% endfor %} {% endif %} {% endwith %}
 <!-- flash msg end -->
 
-    <!-- jumbotron
-<div class="jumbotron">
-    <h3>
-        <center>
-            <br>Welcome to our webpage on how the internet works!<br>
-            <br>Click down our Navigation Pane to get insight on each topic that is of your interest. <br>
-            <br>Thank you for visiting our Website!
-    </h3>
-    </center>
-</div>
--->
 <!-- carousel -->
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
@@ -62,64 +51,23 @@
     </ol>
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <a href="history.html"><img class="d-block w-100" src="https://images.unsplash.com/photo-1488229297570-58520851e868?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1349&q=80"></a>
+            <a href="#"><img class="d-block w-100" src="https://images.pexels.com/photos/2983098/pexels-photo-2983098.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260"></a>
             <div class="carousel-caption d-none d-md-block">
-                <h3>History of the Internet</h3>
+                <h3>BLT Burger</h3>
             </div>
         </div>
         <div class="carousel-item">
-            <a href="browserwars.html"><img class="d-block w-100" src="https://images.freeimages.com/images/large-previews/99a/web-browser-icons-1524015.jpg"></a>
+            <a href="#"><img class="d-block w-100" src="https://images.pexels.com/photos/4871174/pexels-photo-4871174.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260"></a>
             <div class="carousel-caption d-none d-md-block">
-                <h3>Browser Wars</h3>
+                <h3>Chicken Caesar Salad</h3>
             </div>
         </div>
         <div class="carousel-item">
-            <a href="dns.html"><img class="d-block w-100" src="https://images.pexels.com/photos/1181316/pexels-photo-1181316.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"></a>
+            <a href="#"><img class="d-block w-100" src="https://images.pexels.com/photos/5807019/pexels-photo-5807019.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260"></a>
             <div class="carousel-caption d-none d-md-block">
-                <h3>DNS</h3>
+                <h3>Pasta</h3>
             </div>
         </div>
-        <div class="carousel-item">
-            <a href="domain_names.html"><img class="d-block w-100" src="https://images.unsplash.com/photo-1594663653925-365bcbf7ef86?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80"></a>
-            <div class="carousel-caption d-none d-md-block">
-                <h3>Domain Names and ICANN</h3>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <a href="ip_addressing.html"><img class="d-block w-100" src="https://images.pexels.com/photos/1148820/pexels-photo-1148820.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"></a>
-            <div class="carousel-caption d-none d-md-block">
-                <h3>IP Addresses and Packets</h3>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <a href="dotcom.html"><img class="d-block w-100" src="https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80"></a>
-            <div class="carousel-caption d-none d-md-block">
-                <h3>Dot Com Bubble</h3>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <a href="html_css.html"><img class="d-block w-100" src="https://images.pexels.com/photos/160107/pexels-photo-160107.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"></a>
-            <div class="carousel-caption d-none d-md-block">
-                <h3>W3C and HTML and CSS</h3>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <a href="innovators.html"><img class="d-block w-100" src="https://images.unsplash.com/photo-1524046997286-863495b9638e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1490&q=80"></a>
-            <div class="carousel-caption d-none d-md-block">
-                <h3>The Innovators</h3>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <a href="http.html"><img class="d-block w-100" src="https://images.freeimages.com/images/large-previews/1ce/internet-and-future-1154207.jpg"></a>
-            <div class="carousel-caption d-none d-md-block">
-                <h3>HTTP and HTTPS Protocols</h3>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <a href="internetsearch.html"><img class="d-block w-100" src="https://images.freeimages.com/images/large-previews/e83/what-u-looking-for-1-1552463.jpg"></a>
-            <div class="carousel-caption d-none d-md-block">
-                <h3>Internet Search</h3>
-            </div>
         </div>
         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>

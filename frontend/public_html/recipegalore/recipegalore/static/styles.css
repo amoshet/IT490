@@ -77,3 +77,8 @@ th {
     background-color: blue;
     color: white;
 }
+
+div[class="carimg"]{
+    width: 1080px;  
+    height: 1920px;  
+}
