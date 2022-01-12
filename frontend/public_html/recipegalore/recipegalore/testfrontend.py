@@ -4,7 +4,9 @@ import flask
 from flask import Flask, url_for, redirect, render_template, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 
+#this line is only for this test environment
 app = Flask(__name__)
+app.secret_key = 'shh'
 
 @app.route("/")
 def default():
@@ -14,21 +16,16 @@ def default():
 def index():
 	return flask.render_template("index.html")
 
-@app.route('/home')
-def home():
-        return flask.render_template("home.html")
-
-
 @app.route('/search')
-def search():
+def index():
         return flask.render_template("search.html")
 
+#TODO function that if register.submit is pressed and db comes back true, redirect to home
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if request.method == 'POST':
 		logemail = request.form['email']
 		logpass = request.form['password']
-		print(logpass)
 		dbchk = backendClient()
 		#sends login info to backend/db
 		loginfo = dbchk.call({'type':'login', 'email':logemail, 'password':logpass}).decode()
@@ -57,13 +54,17 @@ def register():
 		regpass = request.form['p1']
 		regpass2 = request.form['p2']
 		#makes sure passwords match when registering user
+		#TODO redirect to register again, but tell user passwords 
+		# + do not match
 		if regpass2 != regpass:
 			flash('Passwords do not match, please try again')
 			return redirect('/register', code=302)
 		dbchk2 = backendClient()
 		#sends register info to backend/db
 		reginfo = dbchk2.call({'type':'register', 'email':regemail, 'password':regpass}).decode()
-		#register function checks if db added user successfully
+		#right now just returns whether successful or not
+		#TODO have it redirect to login and say register successful
+                #TODO please login
 		regStatus = reginfo.strip('\"')
 		print(regStatus)
 		if regStatus == 'Registration Complete':
@@ -77,6 +78,12 @@ def register():
 			return redirect('/register', code=302)
 	else:
 		return flask.render_template('register.html')
+#TODO change to function that redirects if not logged in, and asks them to login first
+@app.route('/home')
+def home():
+    return flask.render_template("home.html")
+
+#TODO add function for recipe search
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=5001, debug=True)
